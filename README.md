@@ -9,3 +9,16 @@
   * `movies.csv`: 3,143 rows of movie information with the following columns: id, title, country, genre, director, poster as `String` and year and minutes as `int`. 
   
   * `ratings.csv`: 10,000 rows of rating information with the following columns: rater_id and movie_id as type `String` and rating and time as `int`. The time column uses Unix Timestamp.
+  
+## Algorithm Approach: 
+
+> As mentioned earlier, we will be using collaborative filtering based on either movies or users. There are a few ways to define similarity among users or among movies and we will be focusing on: 
+
+* Pearson Correlation  
+* Cosine Similarity  
+
+> A few key areas to improve based upon the existing Duke project:
+  1. cold start
+  2. remove individual user baseline bias 
+  3. adjust similarity weighting based upon movie types (controversial or commonly acclaimed movies) and number of commonly rated movies among two users. 
+
