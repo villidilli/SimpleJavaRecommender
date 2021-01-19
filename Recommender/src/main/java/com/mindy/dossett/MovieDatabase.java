@@ -14,21 +14,21 @@ public class MovieDatabase {
     private static HashMap<String, Movie> movieMap;
     private static final String movieDataPath = "src/main/resources/movies.csv";
 
-    public MovieDatabase(){};
+    public MovieDatabase() {
+    }
 
     private static void initialize() throws IOException {
-        if (movieMap == null){
+        if (movieMap == null) {
             movieMap = new HashMap<String, Movie>();
             loadMovieData();
         }
     }
-    
-    
-    
+
+
     private static ArrayList<Movie> ReadMovieData() throws IOException {
         ArrayList<Movie> movieList = new ArrayList<Movie>();
         CSVParser csvParser = new ReadCSVFile().getCSVParser(movieDataPath);
-        for (CSVRecord row: csvParser){
+        for (CSVRecord row : csvParser) {
             String movieId = row.get("id");
             String title = row.get("title");
             String year = row.get("year");
@@ -37,15 +37,15 @@ public class MovieDatabase {
             String country = row.get("country");
             String minutes = row.get("minutes");
             String poster = row.get("poster");
-            Movie movie = new Movie(movieId,title,year,genres,director,country,poster,minutes);
+            Movie movie = new Movie(movieId, title, year, genres, director, country, poster, minutes);
             movieList.add(movie);
         }
         return movieList;
     }
-    
+
     private static void loadMovieData() throws IOException {
         ArrayList<Movie> movieList = ReadMovieData();
-        for (Movie movie: movieList){
+        for (Movie movie : movieList) {
             movieMap.put(movie.getId(), movie);
         }
     }
@@ -135,16 +135,19 @@ public class MovieDatabase {
         return movieMap.size();
     }
 
-//    public static ArrayList<String> filterBy(Filter f) {
-//        initialize();
-//        ArrayList<String> list = new ArrayList<String>();
-//        for(String movieId : movieMap.keySet()) {
-//            if (f.satisfies(movieId)) {
-//                list.add(movieId);
-//            }
-//        }
-//
-//        return list;
-//    }
-    
+    public static ArrayList<String> filterBy(Filter f) {
+        try {
+            initialize();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ArrayList<String> list = new ArrayList<String>();
+        for (String movieId : movieMap.keySet()) {
+            if (f.satisfies(movieId)) {
+                list.add(movieId);
+            }
+        }
+        return list;
+    }
+
 }
