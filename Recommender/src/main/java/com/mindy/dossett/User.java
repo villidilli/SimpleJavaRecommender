@@ -10,15 +10,15 @@ This object represents a single User, a record from UserDatabase
 
 public class User {
     private String userId;
-    private HashMap<String, MovieRating> infoMap;
+    private HashMap<String, RatingLookUp> infoMap;
 
     public User(String aUserId){
         userId = aUserId;
-        infoMap = new HashMap<String, MovieRating>();
+        infoMap = new HashMap<String, RatingLookUp>();
     }
 
     public void addRating(String movieId,double rating, long rateTime){
-        infoMap.put(movieId, new MovieRating(movieId, rating,rateTime));
+        infoMap.put(movieId, new RatingLookUp(movieId, rating));
     }
 
     public boolean hasRating(String movieId){
@@ -34,6 +34,18 @@ public class User {
             return infoMap.get(movieId).getRatingValue();
         }
         return -1;
+    }
+    
+    public double getAvgRating(){
+        int num = numRatings();
+        if (num > 0) {
+            double total = 0.0;
+            for (RatingLookUp rating : infoMap.values()) {
+                total += rating.getRatingValue();
+            }
+            return (double)(total /num);
+        }
+        return 0.0;
     }
 
     public int numRatings(){

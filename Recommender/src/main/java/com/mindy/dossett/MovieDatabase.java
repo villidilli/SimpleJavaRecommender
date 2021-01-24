@@ -135,16 +135,16 @@ public class MovieDatabase {
         return movieMap.size();
     }
 
-    public static ArrayList<String> filterBy(Filter f) {
+    public static ArrayList<Movie> filterBy(Filter f) {
         try {
             initialize();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<Movie> list = new ArrayList<Movie>();
         for (String movieId : movieMap.keySet()) {
             if (f.satisfies(movieId)) {
-                list.add(movieId);
+                list.add(movieMap.get(movieId));
             }
         }
         return list;

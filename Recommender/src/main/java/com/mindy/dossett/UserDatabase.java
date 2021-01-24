@@ -13,7 +13,7 @@ public class UserDatabase {
 
     public UserDatabase(){}
 
-    private static void initialize() throws IOException {
+    public static void initialize() throws IOException {
         if (userMap == null){
             userMap = new HashMap<String, User>();
             loadUserData();
@@ -28,13 +28,10 @@ public class UserDatabase {
             String movieId = row.get("movie_id");
             Double rating = Double.parseDouble(row.get("rating"));
             int time = Integer.parseInt(row.get("time"));
-            User user;
-            if (userMap.containsKey(userId)){
-                user = userMap.get(userId);
-            } else {
-                user = new User(userId);
+            if (!userMap.containsKey(userId)){
+                userMap.put(userId, new User(userId));
             }
-            user.addRating(movieId, rating, time);
+            userMap.get(userId).addRating(movieId, rating, time);
         }
     }
 
