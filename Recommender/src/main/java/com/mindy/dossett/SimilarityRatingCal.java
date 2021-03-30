@@ -17,7 +17,7 @@ public abstract class SimilarityRatingCal {
         filter = f;
     }
 
-    public abstract double calCosineSim(User user, User other);
+    public abstract double calCosineSim(User user, User other, String id1, String id2);
 
     public abstract void getSimilarity();
 

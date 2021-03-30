@@ -13,7 +13,7 @@ public class UserBasedRating extends SimilarityRatingCal {
     }
 
     @Override
-    public double calCosineSim(User user, User other) {
+    public double calCosineSim(User user, User other, String id1, String id2) {
         double similarityScore = 0.0;
         double nomUser = 0.0;
         double nomOther = 0.0;
@@ -22,12 +22,12 @@ public class UserBasedRating extends SimilarityRatingCal {
         double userAvg = user.getAvgRating();
         ArrayList<String> otherMovies = other.getMoviesRated();
         double otherAvg = other.getAvgRating();
-        for (String id1: userMovies) {
-            for (String id2 : otherMovies) {
+        for (String mid1: userMovies) {
+            for (String mid2 : otherMovies) {
                 if (id1.equals(id2)) {
                     minNumCommon++;
-                    double userScore = user.getRating(id1) - userAvg;
-                    double otherScore = other.getRating(id2) - otherAvg;
+                    double userScore = user.getRating(mid1) - userAvg;
+                    double otherScore = other.getRating(mid2) - otherAvg;
                     similarityScore += (userScore) * (otherScore);
                     nomUser += Math.pow(userScore, 2);
                     nomOther += Math.pow(otherScore, 2);
@@ -46,7 +46,7 @@ public class UserBasedRating extends SimilarityRatingCal {
         for (User other: UserDatabase.getUsers()){
             String otherId = other.getUserId();
             if (!otherId.equals(userId)){
-                double cosineScore = calCosineSim(user,other);
+                double cosineScore = calCosineSim(user,other, null, null);
                 if (cosineScore != -100.0) {
                     similarityList.add(new RatingLookUp(otherId, cosineScore));
                 }
