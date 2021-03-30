@@ -24,7 +24,7 @@ public class UserBasedRating extends SimilarityRatingCal {
         double otherAvg = other.getAvgRating();
         for (String mid1: userMovies) {
             for (String mid2 : otherMovies) {
-                if (id1.equals(id2)) {
+                if (mid1.equals(mid2)) {
                     minNumCommon++;
                     double userScore = user.getRating(mid1) - userAvg;
                     double otherScore = other.getRating(mid2) - otherAvg;
@@ -41,7 +41,7 @@ public class UserBasedRating extends SimilarityRatingCal {
         }
 
     @Override
-    public void getSimilarity() {
+    public void getSimilarity(String movieId) {
         User user = UserDatabase.getUser(userId);
         for (User other: UserDatabase.getUsers()){
             String otherId = other.getUserId();
@@ -57,7 +57,7 @@ public class UserBasedRating extends SimilarityRatingCal {
 
     @Override
     public ArrayList<RatingLookUp> getSimilarRatings() {
-        getSimilarity();
+        getSimilarity(null);
         int numNeighors = Math.min(similarityList.size(),similarityNum);
         ArrayList<RatingLookUp> similarityRatingList = new ArrayList<RatingLookUp>();
         ArrayList<Movie> movieList= MovieDatabase.filterBy(filter);

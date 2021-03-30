@@ -59,6 +59,21 @@ public class Movie {
         return minutes;
     }
 
+    public double calAvgMovieRating(){
+        double avgRating = 0.0;
+        double cnt = 0.0;
+        for (User user: UserDatabase.getUsers()){
+            if (user.hasRating(id)){
+                avgRating += user.getRating(id);
+                cnt ++;
+            }
+        }
+        if (cnt >=1){
+            return (avgRating/cnt);
+        }
+        return -1.0;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
