@@ -4,6 +4,7 @@ Look at cosine similarity among movies to calculate ratings
 https://towardsdatascience.com/comprehensive-guide-on-item-based-recommendation-systems-d67e40e2b75d
  */
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,75 +34,83 @@ public class ItemBasedRating extends SimilarityRatingCal {
                 nomOther += Math.pow(m2Score,2);
             }
         }
-        if (minNumCommonUser >=2){
+        if (minNumCommonUser >=minimalRater){
             return similarityScore/(Math.sqrt(nomMovie*nomOther));
         }
         return -100.0;
     }
 
     @Override
-    public void getSimilarity(String movieId) {
-        // reset for each movieId similarity list
-        similarityList.clear();
-        ArrayList<Movie> allMovies = MovieDatabase.filterBy(filter);
-        for (Movie other: allMovies) {
-            String otherId = other.getId();
-            if (!otherId.equals(movieId)) {
-                double cosineScore = calCosineSim(null, null, movieId, otherId);
-                if (cosineScore != -100.0) {
-                    similarityList.add(new RatingLookUp(otherId, cosineScore));
-                }
-            }
-        }
-        Collections.sort(similarityList, Collections.reverseOrder());
+    public void getSimilarity() {
+
     }
 
-    @Override
-    public ArrayList<RatingLookUp> getSimilarRatings() {
+
+    public HashMap<String, ArrayList<RatingLookUp>> getSimilarityScores() {
+        HashMap<String, ArrayList<RatingLookUp>> allCosineScores = new HashMap<String, ArrayList<RatingLookUp>>();
+        // movie i
+        ArrayList<Movie> allMovies = MovieDatabase.filterBy(filter);
         User user = UserDatabase.getUser(userId);
+        // movie j
         ArrayList<String> allRatedMovies = user.getMoviesRated();
-        Double userAvg = UserDatabase.getUser(userId).getAvgRating();
-        HashMap<String, ArrayList<Double>> similarityRatingMovieMap = new HashMap<String, ArrayList<Double>>();
-        ArrayList<RatingLookUp> avgSimilarityRatingList = new ArrayList<RatingLookUp>();
-        // need to go through all movies in this func not getSimiliarty Function... for each movie, need to go through rated items by this user of interest
-        for (String id1: allRatedMovies){
-            getSimilarity(id1);
-            double curRating = user.getRating(id1);
-            int counter = 0;
-            double norm = 0.0;
-            double total = 0.0;
-            for (RatingLookUp similarityScore:similarityList) {
-                String movieId = similarityScore.getLookUpId();
-                double avgMovieScore = MovieDatabase.getMovie(movieId).calAvgMovieRating();
-                if (avgMovieScore != -1.0) {
-                    counter++;
-                    double cosineScore = similarityScore.getRatingValue();
-                    total += cosineScore * (curRating - avgMovieScore);
-                    norm += cosineScore;
-                }
-                if (counter >= similarityNum) {
-                    double predRating = userAvg + (total / norm);
-                    if (similarityRatingMovieMap.containsKey(movieId)) {
-                        similarityRatingMovieMap.get(movieId).add(predRating);
-                    } else {
-                        ArrayList<Double> ratings = new ArrayList<Double>();
-                        ratings.add(predRating);
-                        similarityRatingMovieMap.put(movieId, ratings);
+        for (Movie other : allMovies) {
+            String otherId = other.getId();
+            ArrayList<RatingLookUp> newList = new ArrayList<RatingLookUp>();
+            for (String movieId : allRatedMovies) {
+                if (!otherId.equals(movieId)) {
+                    double cosineScore = calCosineSim(null, null, movieId, otherId);
+                    if (cosineScore != -100.0) {
+                        newList.add(new RatingLookUp(movieId, cosineScore));
                     }
                 }
-
+            }
+            if (newList.size() >= similarityNum) {
+                allCosineScores.put(otherId, newList);
+//                System.out.println(otherId);
+//                System.out.println(allCosineScores.get(otherId));
             }
         }
-        for (String movieId: similarityRatingMovieMap.keySet()){
-            ArrayList<Double> allScore = similarityRatingMovieMap.get(movieId);
+//        System.out.println("after for loop");
+//        for (String id: allCosineScores.keySet()){
+//            System.out.println(id);
+//            System.out.println(allCosineScores.get(id));
+//        }
+        return allCosineScores;
+    }
+    @Override
+    public ArrayList<RatingLookUp> getSimilarRatings() {
+        ArrayList<RatingLookUp> calRatings = new ArrayList<RatingLookUp>();
+        User user = UserDatabase.getUser(userId);
+        Double userAvg = user.getAvgRating();
+        HashMap<String, ArrayList<RatingLookUp>> allScores = getSimilarityScores();
+        for (String movie: allScores.keySet()){
+            ArrayList<RatingLookUp> allSims = allScores.get(movie);
+            Double avgR1 = MovieDatabase.getMovie(movie).calAvgMovieRating();
+//            System.out.println(avgR1);
+            double norm = 0.0;
             double total = 0.0;
-            for (double score: allScore){
-                total += score;
+            int counter = 0;
+            for (RatingLookUp rate:allSims ){
+                String ratedId = rate.getLookUpId();
+                Double avgR2 = MovieDatabase.getMovie(ratedId).calAvgMovieRating();
+                Double userRating = user.getRating(ratedId);
+                if (avgR2 != -1.0) {
+                    counter++;
+                    Double cosine = rate.getRatingValue();
+                    System.out.println(cosine);
+                    total += cosine* (userRating - avgR2);
+                    norm += cosine;
+                }
             }
-            avgSimilarityRatingList.add(new RatingLookUp(movieId, total/allScore.size()));
+            System.out.println(norm+" "+counter+" "+total);
+            if (counter >= similarityNum && norm > 0.0) {
+                double predRating = avgR1 + (total / norm);
+                calRatings.add(new RatingLookUp(movie, predRating));
+            }
         }
-        Collections.sort(avgSimilarityRatingList, Collections.reverseOrder());
-        return avgSimilarityRatingList;
+        // scale between 1 to 10 ((scale = (X-xmin)/(Xmax-Xmin))*10;
+        Collections.sort(calRatings, Collections.reverseOrder());
+        return calRatings;
     }
 
 }

@@ -19,8 +19,8 @@ import java.nio.file.Paths;
 public class App {
 
     public static void main(String[] args){
-        ItemBasedRating userR = new ItemBasedRating("2",150,10,
-                new RepeatFilter(UserDatabase.getUser("2")));
-        System.out.println(userR.getSimilarRatings().size());
+        ItemBasedRating userR = new ItemBasedRating("9",4,1,
+                new NoFilter());
+        System.out.println(userR.getSimilarRatings());
     }
 }

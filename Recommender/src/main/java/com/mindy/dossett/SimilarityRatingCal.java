@@ -19,7 +19,7 @@ public abstract class SimilarityRatingCal {
 
     public abstract double calCosineSim(User user, User other, String id1, String id2);
 
-    public abstract void getSimilarity(String movieId);
+    public abstract void getSimilarity();
 
     public abstract ArrayList<RatingLookUp> getSimilarRatings();
 }
