@@ -16,8 +16,7 @@ public class ItemBasedRating extends SimilarityRatingCal {
         super(id, neighborSize, minRater, f);
     }
 
-    @Override
-    public double calCosineSim(User user, User other, String id1, String id2) {
+    public double calItemSim(String id1, String id2) {
         double similarityScore = 0.0;
         double nomMovie = 0.0;
         double nomOther = 0.0;
@@ -34,15 +33,10 @@ public class ItemBasedRating extends SimilarityRatingCal {
                 nomOther += Math.pow(m2Score,2);
             }
         }
-        if (minNumCommonUser >=minimalRater){
+        if (minNumCommonUser >= minimalRater){
             return similarityScore/(Math.sqrt(nomMovie*nomOther));
         }
         return -100.0;
-    }
-
-    @Override
-    public void getSimilarity() {
-
     }
 
 
@@ -58,7 +52,7 @@ public class ItemBasedRating extends SimilarityRatingCal {
             ArrayList<RatingLookUp> newList = new ArrayList<RatingLookUp>();
             for (String movieId : allRatedMovies) {
                 if (!otherId.equals(movieId)) {
-                    double cosineScore = calCosineSim(null, null, movieId, otherId);
+                    double cosineScore = calItemSim(movieId, otherId);
                     if (cosineScore != -100.0) {
                         newList.add(new RatingLookUp(movieId, cosineScore));
                     }
@@ -66,17 +60,11 @@ public class ItemBasedRating extends SimilarityRatingCal {
             }
             if (newList.size() >= similarityNum) {
                 allCosineScores.put(otherId, newList);
-//                System.out.println(otherId);
-//                System.out.println(allCosineScores.get(otherId));
             }
         }
-//        System.out.println("after for loop");
-//        for (String id: allCosineScores.keySet()){
-//            System.out.println(id);
-//            System.out.println(allCosineScores.get(id));
-//        }
         return allCosineScores;
     }
+
     @Override
     public ArrayList<RatingLookUp> getSimilarRatings() {
         ArrayList<RatingLookUp> calRatings = new ArrayList<RatingLookUp>();
@@ -86,7 +74,6 @@ public class ItemBasedRating extends SimilarityRatingCal {
         for (String movie: allScores.keySet()){
             ArrayList<RatingLookUp> allSims = allScores.get(movie);
             Double avgR1 = MovieDatabase.getMovie(movie).calAvgMovieRating();
-//            System.out.println(avgR1);
             double norm = 0.0;
             double total = 0.0;
             int counter = 0;
@@ -97,20 +84,16 @@ public class ItemBasedRating extends SimilarityRatingCal {
                 if (avgR2 != -1.0) {
                     counter++;
                     Double cosine = rate.getRatingValue();
-                    System.out.println(cosine);
                     total += cosine* (userRating - avgR2);
                     norm += cosine;
                 }
             }
-            System.out.println(norm+" "+counter+" "+total);
             if (counter >= similarityNum && norm > 0.0) {
                 double predRating = avgR1 + (total / norm);
                 calRatings.add(new RatingLookUp(movie, predRating));
             }
         }
-        // scale between 1 to 10 ((scale = (X-xmin)/(Xmax-Xmin))*10;
         Collections.sort(calRatings, Collections.reverseOrder());
         return calRatings;
     }
-
 }

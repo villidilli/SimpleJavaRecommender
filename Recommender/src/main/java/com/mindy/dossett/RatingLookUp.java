@@ -31,8 +31,9 @@ public class RatingLookUp implements Comparable<RatingLookUp>{
 
     @Override
     public int compareTo(RatingLookUp o) {
-        if (ratingValue < o.ratingValue) return -1;
-        if (ratingValue > o.ratingValue) return 1;
+        double delta = ratingValue - o.ratingValue;
+        if (delta > 0 ) return 1;
+        if (delta < 0) return -1;
         return 0;
     }
 }

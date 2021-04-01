@@ -1,7 +1,10 @@
 package com.mindy.dossett;
 /*
 Look at similarity among users to calculate average ratings for all qualified movies
+https://www.geeksforgeeks.org/user-based-collaborative-filtering/
  */
+
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,8 +15,7 @@ public class UserBasedRating extends SimilarityRatingCal {
         super(id, neighborSize, minRater, f);
     }
 
-    @Override
-    public double calCosineSim(User user, User other, String id1, String id2) {
+    public double calUserSim(User user, User other) {
         double similarityScore = 0.0;
         double nomUser = 0.0;
         double nomOther = 0.0;
@@ -34,31 +36,33 @@ public class UserBasedRating extends SimilarityRatingCal {
                 }
             }
         }
-        if (minNumCommon >=2) {
-            return similarityScore / (Math.sqrt(nomUser * nomOther));
+        if (minNumCommon >= 2 && similarityScore != 0.0 && nomUser != 0.0 && nomOther != 0.0) {
+                return similarityScore / (Math.sqrt(nomUser * nomOther));
         }
         return -100.0;
         }
 
-    @Override
-    public void getSimilarity() {
+
+    public ArrayList<RatingLookUp> getUserSimilarity() {
+        ArrayList<RatingLookUp> similarityScore = new ArrayList<RatingLookUp>();
         User user = UserDatabase.getUser(userId);
         for (User other: UserDatabase.getUsers()){
             String otherId = other.getUserId();
             if (!otherId.equals(userId)){
-                double cosineScore = calCosineSim(user,other, null, null);
+                double cosineScore = calUserSim(user,other);
                 if (cosineScore != -100.0) {
-                    similarityList.add(new RatingLookUp(otherId, cosineScore));
+                    similarityScore.add(new RatingLookUp(otherId, cosineScore));
                 }
             }
         }
-        Collections.sort(similarityList, Collections.reverseOrder());
+        Collections.sort(similarityScore, Collections.reverseOrder());
+        return similarityScore;
     }
 
     @Override
     public ArrayList<RatingLookUp> getSimilarRatings() {
-        getSimilarity();
-        int numNeighors = Math.min(similarityList.size(),similarityNum);
+        ArrayList<RatingLookUp> similarityScore = getUserSimilarity();
+        int numNeighors = Math.min(similarityScore.size(),similarityNum);
         ArrayList<RatingLookUp> similarityRatingList = new ArrayList<RatingLookUp>();
         ArrayList<Movie> movieList= MovieDatabase.filterBy(filter);
         Double userAvg = UserDatabase.getUser(userId).getAvgRating();
@@ -68,7 +72,7 @@ public class UserBasedRating extends SimilarityRatingCal {
             double norm = 0.0;
             double total = 0.0;
             for (int i=0; i < numNeighors; i++){
-                RatingLookUp userRating = similarityList.get(i);
+                RatingLookUp userRating = similarityScore.get(i);
                 Double cosineScore = userRating.getRatingValue();
                 String otherId = userRating.getLookUpId();
                 User userOther = UserDatabase.getUser(otherId);
