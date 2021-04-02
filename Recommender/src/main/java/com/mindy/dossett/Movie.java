@@ -74,6 +74,16 @@ public class Movie {
         return -1.0;
     }
 
+    public int getViewCount(){
+        int cnt = 0;
+        for (User user: UserDatabase.getUsers()){
+            if (user.hasRating(id)){
+                cnt ++;
+            }
+        }
+        return cnt;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +

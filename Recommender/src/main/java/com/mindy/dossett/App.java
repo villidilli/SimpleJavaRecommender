@@ -1,16 +1,5 @@
 package com.mindy.dossett;
 
-import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVFormat;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-
 
 /**
  * Hello world!
@@ -18,9 +7,14 @@ import java.nio.file.Paths;
  */
 public class App {
 
-    public static void main(String[] args){
-        ItemBasedRating userR = new ItemBasedRating("9",4,1,
-                new NoFilter());
-        System.out.println(userR.getSimilarRatings());
+    public static void main(String[] args) {
+//        UserBasedRating userR = new UserBasedRating("9", 2, 1,
+//                new RepeatFilter(UserDatabase.getUser("9")));
+//        System.out.println(userR.getSimilarRatings());
+//        ItemBasedRating userM = new ItemBasedRating("9", 3, 1,
+//                new RepeatFilter(UserDatabase.getUser("9")));
+//        System.out.println(userM.getSimilarRatings());
+        UserInfoInitializer initializer = new UserInfoInitializer();
+        System.out.println(initializer.getMovieForRating());
     }
 }
