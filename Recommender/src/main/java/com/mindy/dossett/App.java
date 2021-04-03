@@ -1,6 +1,8 @@
 package com.mindy.dossett;
 
 
+import java.util.Scanner;
+
 /**
  * Hello world!
  *
@@ -15,6 +17,10 @@ public class App {
 //                new RepeatFilter(UserDatabase.getUser("9")));
 //        System.out.println(userM.getSimilarRatings());
         UserInfoInitializer initializer = new UserInfoInitializer();
-        System.out.println(initializer.getMovieForRating());
+        initializer.UpdateNewUser();
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Enter your rating for this movie:");
+//        double rating = scanner.nextDouble();
+//        System.out.println(rating);
     }
 }

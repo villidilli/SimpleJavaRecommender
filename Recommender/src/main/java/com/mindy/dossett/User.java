@@ -17,7 +17,7 @@ public class User {
         infoMap = new HashMap<String, RatingLookUp>();
     }
 
-    public void addRating(String movieId,double rating, long rateTime){
+    public void addRating(String movieId,double rating){
         infoMap.put(movieId, new RatingLookUp(movieId, rating));
     }
 

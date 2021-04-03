@@ -31,7 +31,7 @@ public class UserDatabase {
             if (!userMap.containsKey(userId)){
                 userMap.put(userId, new User(userId));
             }
-            userMap.get(userId).addRating(movieId, rating, time);
+            userMap.get(userId).addRating(movieId, rating);
         }
     }
 
