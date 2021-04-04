@@ -73,5 +73,6 @@ public class UserInfoInitializer {
                 newUser.addRating(movieId.get(i), score);
             }
         }
+        UserDatabase.updateUserInfo(newUser);
     }
 }

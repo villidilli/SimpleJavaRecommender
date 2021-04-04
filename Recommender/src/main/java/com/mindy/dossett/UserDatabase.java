@@ -35,6 +35,13 @@ public class UserDatabase {
         }
     }
 
+    public static void updateUserInfo(User user){
+        String userId = user.getUserId();
+        userMap.put(userId, user);
+    }
+
+
+
     public static User getUser(String userId) {
         try {
             initialize();
