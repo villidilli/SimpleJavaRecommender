@@ -28,34 +28,43 @@ public class RecommenderRunner {
                     String movieId = itemRec.get(i).getLookUpId();
                     for (int j = 0; j < userSize; j++) {
                         String id2 = userRec.get(j).getLookUpId();
+//                        System.out.println(movieId+" "+id2);
                         if (movieId.equals(id2)) {
                             repeatMovies.add(movieId);
                             break;
                         }
                     }
                 }
-                for (String id : repeatMovies) {
-                    for (RatingLookUp rec : itemRec) {
-                        if (!rec.getLookUpId().equals(id)) {
-                            Rec.add(rec);
+                System.out.println(repeatMovies.size()+" "+Rec.size()+" "+itemSize+" "+itemRec.size());
+                for (int i = 0; i < itemSize; i++) {
+                    System.out.println(i);
+                    for (String id : repeatMovies) {
+                        if (itemRec.get(i).getLookUpId().equals(id)) {
+                           itemRec.remove(itemRec.get(i));
+                           break;
                         }
                     }
                 }
-                for (RatingLookUp rec : userRec) {
-                    Rec.add(rec);
+                System.out.println(itemRec.size());
+                for (int i = 0; i < itemSize; i++){
+                    System.out.println(i);
+                    Rec.add(itemRec.get(i));
+                }
+                System.out.println(Rec.size());
+                for (int j=0; j < userSize; j++) {
+                    Rec.add(userRec.get(j));
                 }
                 Collections.sort(Rec, Collections.reverseOrder());
             } else if (itemSize > 0) {
-                for (RatingLookUp rec : itemRec) {
-                    Rec.add(rec);
+                for (int i= 0; i <itemSize; i++) {
+                    Rec.add(itemRec.get(i));
                 }
             } else {
-                for (RatingLookUp rec : userRec) {
-                    Rec.add(rec);
+                for (int j=0; j < userSize; j++) {
+                    Rec.add(userRec.get(j));
                 }
             }
             int recItems = Rec.size() >= 10 ? 10 : Rec.size();
-            System.out.println(recItems);
             for (int k = 0; k < recItems; k++) {
                 String movieId = Rec.get(k).getLookUpId();
                 String movieTitle = MovieDatabase.getTitle(movieId);
