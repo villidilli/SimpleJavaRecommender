@@ -44,7 +44,7 @@ public class UserInfoInitializer {
         // Random shuffle for top 30 movies
         Random rand = new Random();
         HashSet<String> chosenMovie = new HashSet<String>();
-        while (chosenMovie.size() < 30){
+        while (chosenMovie.size() < 15){
             int randomInd = rand.nextInt(200);
             chosenMovie.add(top_100.get(randomInd));
         }
@@ -66,7 +66,7 @@ public class UserInfoInitializer {
         // fix at 30 movies
         System.out.println("Please rate the following movies on a scale of 0 to 10 (0 is the worst and 10 is the best).");
         System.out.println("If you haven't watched the movie, please enter -1");
-        for (int i=0; i < 30; i++){
+        for (int i=0; i < 15; i++){
             System.out.println("Please rate the movie: <<"+ movieTitle.get(i)+">>");
             double score = userInput.nextDouble();
             if (score != -1.0) {

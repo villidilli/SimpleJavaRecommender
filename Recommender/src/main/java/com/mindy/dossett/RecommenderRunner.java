@@ -18,51 +18,36 @@ public class RecommenderRunner {
         ArrayList<RatingLookUp> Rec = new ArrayList<RatingLookUp>();
         int itemSize = itemRec.size() >= 10 ? 10 : itemRec.size();
         int userSize = userRec.size() >= 10 ? 10 : userRec.size();
+        ArrayList<RatingLookUp> itemList = new ArrayList<RatingLookUp>(itemRec.subList(0,itemSize));
+        ArrayList<RatingLookUp> userList = new ArrayList<RatingLookUp> (userRec.subList(0, userSize));
         // remove repeat ones
         if (itemSize == 0 && userSize == 0) {
             System.out.println("Sorry, we don't have enough information to provide you with good recommendations at this time.");
         } else {
             if (itemSize > 0 && userSize > 0) {
-                ArrayList<String> repeatMovies = new ArrayList<String>();
-                for (int i = 0; i < itemSize; i++) {
-                    String movieId = itemRec.get(i).getLookUpId();
-                    for (int j = 0; j < userSize; j++) {
-                        String id2 = userRec.get(j).getLookUpId();
-//                        System.out.println(movieId+" "+id2);
-                        if (movieId.equals(id2)) {
-                            repeatMovies.add(movieId);
+                System.out.println("Before: "+itemList.size());
+                for (int i=0; i < itemSize; i++) {
+                    RatingLookUp r1 = itemList.get(i);
+                    String id1 = r1.getLookUpId();
+                    for (RatingLookUp r2: userList) {
+                        String id2 = r2.getLookUpId();
+                        if (id1.equals(id2)) {
+                            System.out.println("removed!"+ id2 + " "+id1);
+                            itemList.remove(r1);
                             break;
                         }
                     }
                 }
-                System.out.println(repeatMovies.size()+" "+Rec.size()+" "+itemSize+" "+itemRec.size());
-                for (int i = 0; i < itemSize; i++) {
-                    System.out.println(i);
-                    for (String id : repeatMovies) {
-                        if (itemRec.get(i).getLookUpId().equals(id)) {
-                           itemRec.remove(itemRec.get(i));
-                           break;
-                        }
-                    }
-                }
-                System.out.println(itemRec.size());
-                for (int i = 0; i < itemSize; i++){
-                    System.out.println(i);
-                    Rec.add(itemRec.get(i));
-                }
+                System.out.println("After: "+itemList.size());
+                Rec.addAll(itemList);
                 System.out.println(Rec.size());
-                for (int j=0; j < userSize; j++) {
-                    Rec.add(userRec.get(j));
-                }
+                Rec.addAll(userList);
+                System.out.println(Rec.size());
                 Collections.sort(Rec, Collections.reverseOrder());
             } else if (itemSize > 0) {
-                for (int i= 0; i <itemSize; i++) {
-                    Rec.add(itemRec.get(i));
-                }
+                Rec = itemList;
             } else {
-                for (int j=0; j < userSize; j++) {
-                    Rec.add(userRec.get(j));
-                }
+                Rec = userList;
             }
             int recItems = Rec.size() >= 10 ? 10 : Rec.size();
             for (int k = 0; k < recItems; k++) {
