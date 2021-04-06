@@ -37,15 +37,15 @@ public class UserInfoInitializer {
         Collections.sort(allRatings, Collections.reverseOrder());
         Collections.sort(allCounts, Collections.reverseOrder());
         ArrayList<String> top_100 = new ArrayList<String>();
-        for (int i = 0; i< 100; i++){
+        for (int i = 0; i< 50; i++){
             top_100.add(allRatings.get(i).getLookUpId());
             top_100.add(allCounts.get(i).getLookUpId());
         }
         // Random shuffle for top 30 movies
         Random rand = new Random();
         HashSet<String> chosenMovie = new HashSet<String>();
-        while (chosenMovie.size() < 15){
-            int randomInd = rand.nextInt(200);
+        while (chosenMovie.size() < 20){
+            int randomInd = rand.nextInt(100);
             chosenMovie.add(top_100.get(randomInd));
         }
         ArrayList<String> movieList = new ArrayList<String>(chosenMovie);
@@ -66,7 +66,7 @@ public class UserInfoInitializer {
         // fix at 30 movies
         System.out.println("Please rate the following movies on a scale of 0 to 10 (0 is the worst and 10 is the best).");
         System.out.println("If you haven't watched the movie, please enter -1");
-        for (int i=0; i < 15; i++){
+        for (int i=0; i < 20; i++){
             System.out.println("Please rate the movie: <<"+ movieTitle.get(i)+">>");
             double score = userInput.nextDouble();
             if (score != -1.0) {
