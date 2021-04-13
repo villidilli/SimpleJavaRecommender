@@ -18,7 +18,7 @@ public class UserInfoInitializer {
     }
 
     Scanner userInput = new Scanner(System.in);
-    public ArrayList<ArrayList<String>> getMovieForRating(){
+    private ArrayList<ArrayList<String>> getMovieForRating(){
         // only include more recent movies for young audiences
         ArrayList<Movie> allMovies = MovieDatabase.filterBy(new YearAfterFilter(1980));
         // Find the top rated movies
@@ -36,19 +36,20 @@ public class UserInfoInitializer {
         }
         Collections.sort(allRatings, Collections.reverseOrder());
         Collections.sort(allCounts, Collections.reverseOrder());
-        ArrayList<String> top_100 = new ArrayList<String>();
+        ArrayList<String> top_50 = new ArrayList<String>();
         for (int i = 0; i< 50; i++){
-            top_100.add(allRatings.get(i).getLookUpId());
-            top_100.add(allCounts.get(i).getLookUpId());
+            top_50.add(allRatings.get(i).getLookUpId());
+            top_50.add(allCounts.get(i).getLookUpId());
         }
-        // Random shuffle for top 30 movies
+        // Random shuffle for top 20 movies
         Random rand = new Random();
         HashSet<String> chosenMovie = new HashSet<String>();
         while (chosenMovie.size() < 20){
             int randomInd = rand.nextInt(100);
-            chosenMovie.add(top_100.get(randomInd));
+            chosenMovie.add(top_50.get(randomInd));
         }
         ArrayList<String> movieList = new ArrayList<String>(chosenMovie);
+        // get movie Titles for easy access
         ArrayList<String> movieTitles = new ArrayList<String>();
         for (String id: movieList){
             movieTitles.add(MovieDatabase.getMovie(id).getTitle());
@@ -63,7 +64,7 @@ public class UserInfoInitializer {
         ArrayList<ArrayList<String>> moviesForRating = getMovieForRating();
         ArrayList<String> movieId = moviesForRating.get(0);
         ArrayList<String> movieTitle = moviesForRating.get(1);
-        // fix at 30 movies
+        // fix at 20 movies
         System.out.println("Please rate the following movies on a scale of 0 to 10 (0 is the worst and 10 is the best).");
         System.out.println("If you haven't watched the movie, please enter -1");
         for (int i=0; i < 20; i++){

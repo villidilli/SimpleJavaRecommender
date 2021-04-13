@@ -40,8 +40,6 @@ public class UserDatabase {
         userMap.put(userId, user);
     }
 
-
-
     public static User getUser(String userId) {
         try {
             initialize();

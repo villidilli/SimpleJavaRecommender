@@ -4,13 +4,11 @@ Look at cosine similarity among movies to calculate ratings
 https://towardsdatascience.com/comprehensive-guide-on-item-based-recommendation-systems-d67e40e2b75d
  */
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
 public class ItemBasedRating extends SimilarityRatingCal {
-
 
     public ItemBasedRating(String id, int neighborSize, int minRater, Filter f) {
         super(id, neighborSize, minRater, f);
