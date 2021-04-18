@@ -24,5 +24,4 @@
 
 ## Blog post:
 
-> link: 
-
+> link: https://mindy-dossett.com/2021/04/18/collaborative-filtering-in-Java/
