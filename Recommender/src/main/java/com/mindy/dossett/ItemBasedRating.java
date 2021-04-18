@@ -66,7 +66,6 @@ public class ItemBasedRating extends SimilarityRatingCal {
     public ArrayList<RatingLookUp> getSimilarRatings() {
         ArrayList<RatingLookUp> calRatings = new ArrayList<RatingLookUp>();
         User user = UserDatabase.getUser(userId);
-        Double userAvg = user.getAvgRating();
         HashMap<String, ArrayList<RatingLookUp>> allScores = getSimilarityScores();
         for (String movie: allScores.keySet()){
             ArrayList<RatingLookUp> allSims = allScores.get(movie);
@@ -83,10 +82,6 @@ public class ItemBasedRating extends SimilarityRatingCal {
                     Double cosine = rate.getRatingValue();
                     total += cosine * (userRating - avgR2);
                     norm += Math.abs(cosine);
-//                    if (movie.equals("1446192")){
-//                        System.out.println(cosine+" "+userRating+" "+ avgR2);
-//                        System.out.println(total+" "+norm);
-//                    }
                 }
             }
             if (counter >= similarityNum) {
