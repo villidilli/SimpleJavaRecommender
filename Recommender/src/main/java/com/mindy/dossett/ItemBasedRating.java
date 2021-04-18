@@ -14,7 +14,7 @@ public class ItemBasedRating extends SimilarityRatingCal {
         super(id, neighborSize, minRater, f);
     }
 
-    public double calItemSim(String id1, String id2) {
+    private double calItemSim(String id1, String id2) {
         double similarityScore = 0.0;
         double nomMovie = 0.0;
         double nomOther = 0.0;
@@ -37,7 +37,7 @@ public class ItemBasedRating extends SimilarityRatingCal {
         return -100.0;
     }
 
-    public HashMap<String, ArrayList<RatingLookUp>> getSimilarityScores() {
+    private HashMap<String, ArrayList<RatingLookUp>> getSimilarityScores() {
         HashMap<String, ArrayList<RatingLookUp>> allCosineScores = new HashMap<String, ArrayList<RatingLookUp>>();
         // movie i
         ArrayList<Movie> allMovies = MovieDatabase.filterBy(filter);

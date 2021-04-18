@@ -11,13 +11,13 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class UserInfoInitializer {
-    public User newUser;
+    private User newUser;
+    Scanner userInput = new Scanner(System.in);
 
     public UserInfoInitializer(){
         newUser = new User("newUser");
     }
 
-    Scanner userInput = new Scanner(System.in);
     private ArrayList<ArrayList<String>> getMovieForRating(){
         // only include more recent movies for young audiences
         ArrayList<Movie> allMovies = MovieDatabase.filterBy(new YearAfterFilter(1980));

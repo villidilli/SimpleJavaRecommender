@@ -15,7 +15,7 @@ public class UserBasedRating extends SimilarityRatingCal {
         super(id, neighborSize, minRater, f);
     }
 
-    public double calUserSim(User user, User other) {
+    private double calUserSim(User user, User other) {
         double similarityScore = 0.0;
         double nomUser = 0.0;
         double nomOther = 0.0;
@@ -43,7 +43,7 @@ public class UserBasedRating extends SimilarityRatingCal {
         }
 
 
-    public ArrayList<RatingLookUp> getUserSimilarity() {
+    private ArrayList<RatingLookUp> getUserSimilarity() {
         ArrayList<RatingLookUp> similarityScore = new ArrayList<RatingLookUp>();
         User user = UserDatabase.getUser(userId);
         for (User other: UserDatabase.getUsers()){
