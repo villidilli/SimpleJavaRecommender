@@ -18,7 +18,11 @@
 * Cosine Similarity  
 
 > A few key areas to improve based upon the existing Duke project:
-  1. cold start
-  2. remove individual user baseline bias 
-  3. adjust similarity weighting based upon movie types (controversial or commonly acclaimed movies) and number of commonly rated movies among two users. 
+  1. cold start: asks the new user to rate 20 randomly sampled movies with a set of criteria. 
+  2. remove individual user baseline bias by subtracting the average rating. 
+  3. Incorporate both item based and user based collaborative filters. 
+
+## Blog post:
+
+> link: 
 
