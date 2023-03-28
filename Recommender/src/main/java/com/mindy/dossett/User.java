@@ -10,7 +10,7 @@ This object represents a single User, a record from UserDatabase
 
 public class User {
     private String userId;
-    private HashMap<String, RatingLookUp> infoMap;
+    private HashMap<String, RatingLookUp> infoMap; // хранит в себе К - айди фильма / V - его рейтинг
 
     public User(String aUserId){
         userId = aUserId;
@@ -41,7 +41,7 @@ public class User {
         if (num > 0) {
             double total = 0.0;
             for (RatingLookUp rating : infoMap.values()) {
-                total += rating.getRatingValue();
+                total += rating.getRatingValue(); // возвращает значение поле рейтинга
             }
             return (double)(total /num);
         }

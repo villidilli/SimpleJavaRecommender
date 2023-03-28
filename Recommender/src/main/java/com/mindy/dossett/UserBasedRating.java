@@ -15,31 +15,32 @@ public class UserBasedRating extends SimilarityRatingCal {
         super(id, neighborSize, minRater, f);
     }
 
-    private double calUserSim(User user, User other) {
+    private double calUserSim(User user, User other) { // возвращает схожесть оценок (реакций) пользователей на фильмы
         double similarityScore = 0.0;
         double nomUser = 0.0;
         double nomOther = 0.0;
         int minNumCommon = 0;
-        ArrayList<String> userMovies = user.getMoviesRated();
-        double userAvg = user.getAvgRating();
-        ArrayList<String> otherMovies = other.getMoviesRated();
-        double otherAvg = other.getAvgRating();
-        for (String mid1: userMovies) {
-            for (String mid2 : otherMovies) {
-                if (mid1.equals(mid2)) {
-                    minNumCommon++;
-                    double userScore = user.getRating(mid1) - userAvg;
-                    double otherScore = other.getRating(mid2) - otherAvg;
-                    similarityScore += (userScore) * (otherScore);
-                    nomUser += Math.pow(userScore, 2);
+        ArrayList<String> userMovies = user.getMoviesRated(); // получили список айди фильмов у первого юзера
+        double userAvg = user.getAvgRating(); //получил ср.ариф.всех оценок первого юзера которые он поставил фильмам
+        ArrayList<String> otherMovies = other.getMoviesRated(); // получили список айди фильмов у второго юзера
+        double otherAvg = other.getAvgRating(); // аналогично ср.ариф.оценок у другого юзера
+        for (String mid1: userMovies) { //берём каждый айди фильма первого юзера
+            for (String mid2 : otherMovies) { //берём каждый айди фильма второго юзера
+                if (mid1.equals(mid2)) { //если айди равны
+                    minNumCommon++; // количество обоюдно просмотренных фильмов обоими юзерами
+                    double userScore = user.getRating(mid1) - userAvg; //достали оценку первого юзера для этого фильма и вычли среднюю его оценку по просмотренным фильмам
+                    double otherScore = other.getRating(mid2) - otherAvg; // аналогично для второго юзера получили аля "насколько сильно ему нравится фильм относительно всех его"
+                    similarityScore += (userScore) * (otherScore); // todo походу это числитель для вычисления косинуса
+                    nomUser += Math.pow(userScore, 2); // возвращает квадратный корень
                     nomOther += Math.pow(otherScore, 2);
                 }
             }
         }
+        //если мин.число совпадение >=2, и сходство оценок пользователей !=0, и ... хз как обозвать
         if (minNumCommon >= 2 && similarityScore != 0.0 && nomUser != 0.0 && nomOther != 0.0) {
-                return similarityScore / (Math.sqrt(nomUser * nomOther));
+                return similarityScore / (Math.sqrt(nomUser * nomOther)); // todo вычисление косинуса угла
         }
-        return -100.0;
+        return -100.0; //todo походу, когда у пользователей совпадений < 2, т.е. нельзя сказать схожи они или нет, т.к. данных мало
         }
 
 
