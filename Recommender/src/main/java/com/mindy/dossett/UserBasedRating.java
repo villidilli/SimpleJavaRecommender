@@ -40,29 +40,29 @@ public class UserBasedRating extends SimilarityRatingCal {
         if (minNumCommon >= 2 && similarityScore != 0.0 && nomUser != 0.0 && nomOther != 0.0) {
                 return similarityScore / (Math.sqrt(nomUser * nomOther)); // todo вычисление косинуса угла
         }
-        return -100.0; //todo походу, когда у пользователей совпадений < 2, т.е. нельзя сказать схожи они или нет, т.к. данных мало
+        return -100.0; //если у пользователей < 2 обоюдно просмотренных фильмов или расчетные рейтинги 0 , считаем что вывод нельзя сделать
         }
 
 
-    private ArrayList<RatingLookUp> getUserSimilarity() {
-        ArrayList<RatingLookUp> similarityScore = new ArrayList<RatingLookUp>();
-        User user = UserDatabase.getUser(userId);
-        for (User other: UserDatabase.getUsers()){
+    private ArrayList<RatingLookUp> getUserSimilarity() { //получить рейтинг схожести юзеров
+        ArrayList<RatingLookUp> similarityScore = new ArrayList<RatingLookUp>(); //pojo содержит id и rating
+        User user = UserDatabase.getUser(userId); //получили юзера по айди (походу с которым сравнивать будем)
+        for (User other: UserDatabase.getUsers()){ //проходимся по всем юзерам которые есть в базе
             String otherId = other.getUserId();
-            if (!otherId.equals(userId)){
-                double cosineScore = calUserSim(user,other);
-                if (cosineScore != -100.0) {
+            if (!otherId.equals(userId)){ // если айди не равны, значит юзеры разные
+                double cosineScore = calUserSim(user,other); // todo что нам дает это число схожести? похоже просто чисто аля "больше-меньше" другого
+                if (cosineScore != -100.0) { //-100 не добавляем в рейтинг схожести
                     similarityScore.add(new RatingLookUp(otherId, cosineScore));
                 }
             }
         }
-        Collections.sort(similarityScore, Collections.reverseOrder());
+        Collections.sort(similarityScore, Collections.reverseOrder()); // сортируем рейтинг схожести по убыванию
         return similarityScore;
     }
 
     @Override
-    public ArrayList<RatingLookUp> getSimilarRatings() {
-        ArrayList<RatingLookUp> similarityScore = getUserSimilarity();
+    public ArrayList<RatingLookUp> getSimilarRatings() { //общий рейтинг похожести на основании схожести юзеров и ???
+        ArrayList<RatingLookUp> similarityScore = getUserSimilarity(); // рейтинг юзеров по схожести (K- айди юзера V - некий расчетный scope
         int numNeighors = Math.min(similarityScore.size(),similarityNum);
         ArrayList<RatingLookUp> similarityRatingList = new ArrayList<RatingLookUp>();
         ArrayList<Movie> movieList= MovieDatabase.filterBy(filter);
